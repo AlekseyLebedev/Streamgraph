@@ -1,0 +1,30 @@
+ubuntu_test:
+  image: registry.gitlab.com/leb-al/tpos-project/tpos_ubuntu:latest
+  script:
+    - python3 -m unittest tests.test
+    - python3 setup.py bdist_wheel
+
+  artifacts:
+    paths:
+      - dist/*
+
+  only:
+    variables:
+      - $CI_COMMIT_TAG =~ /^release.*/
+      - $CI_COMMIT_REF_NAME == "master"
+
+
+centos_test:
+  image: registry.gitlab.com/leb-al/tpos-project/tpos_centos:latest
+  script:
+    - python3.5 -m unittest tests.test
+    - python3.5 setup.py bdist_rpm --python=python3.5
+
+  artifacts:
+    paths:
+      - dist/*
+
+  only:
+    variables:
+     - $CI_COMMIT_TAG =~ /^release.*/
+     - $CI_COMMIT_REF_NAME == "master"
